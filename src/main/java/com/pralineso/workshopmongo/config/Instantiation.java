@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import com.pralineso.workshopmongo.domain.Post;
 import com.pralineso.workshopmongo.domain.User;
 import com.pralineso.workshopmongo.dto.AuthorDTO;
+import com.pralineso.workshopmongo.dto.CommentDTO;
 import com.pralineso.workshopmongo.repository.PostRepository;
 import com.pralineso.workshopmongo.repository.UserRepository;
 
@@ -38,12 +39,18 @@ public class Instantiation implements CommandLineRunner{
 		User bob = new User(null, "Bob Grey", "bob@gmail.com");
 	
 		userRepository.saveAll(Arrays.asList(maria, alex, bob));
-		
+				
 		Post post1 = new Post(null, sdf.parse("21/02/2020"), "Partiu Viagem", "Vou viajar para São Paulo. Abraços!", new AuthorDTO(maria));
 		Post post2 = new Post(null, sdf.parse("22/02/2020"), "Bom Dia!", "Acordei muito feliz!", new AuthorDTO(maria));
 
-		postRepository.saveAll(Arrays.asList(post1, post2));
+		CommentDTO comment1 = new CommentDTO("Boa viagem mano!", sdf.parse("21/02/2020"), new AuthorDTO(alex));
+		CommentDTO comment2 = new CommentDTO( "Aproveite!", sdf.parse("22/02/2020"), new AuthorDTO(bob));
+		CommentDTO comment3 = new CommentDTO( "Tenha um ótimo dia!", sdf.parse("23/02/2020"), new AuthorDTO(alex));
+
+		post1.getComments().addAll(Arrays.asList(comment1, comment2));
+		post2.getComments().addAll(Arrays.asList(comment3));
 		
+		postRepository.saveAll(Arrays.asList(post1, post2));
 		maria.getPosts().addAll(Arrays.asList(post1, post2));
 		userRepository.save(maria);
 		
